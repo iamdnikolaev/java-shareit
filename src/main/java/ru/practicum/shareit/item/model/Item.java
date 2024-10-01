@@ -1,8 +1,5 @@
 package ru.practicum.shareit.item.model;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -32,27 +29,21 @@ public class Item {
     /**
      * Краткое название.
      */
-    @Size(max = 100, message = "Максимальная длина краткого названия - 100 символов.")
-    @NotBlank(message = "Название не может быть пустым.")
     private String name;
 
     /**
      * Развернутое описание.
      */
-    @Size(max = 255, message = "Максимальная длина описания - 255 символов.")
-    @NotBlank(message = "Описание не может быть пустым.")
     private String description;
 
     /**
      * Статус доступности вещи для аренды.
      */
-    @NotNull(message = "Необходимо указать (не)доступность явно.")
     private Boolean available;
 
     /**
      * Владелец вещи {@link ru.practicum.shareit.user.User}.
      */
-    @NotNull(message = "Необходимо указать владельца вещи.")
     private User owner;
 
     /**

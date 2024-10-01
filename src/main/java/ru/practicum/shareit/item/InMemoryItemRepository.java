@@ -103,6 +103,7 @@ public class InMemoryItemRepository implements ItemRepository {
      * @param text строка поиска.
      * @return Список вещей.
      */
+    @Override
     public List<Item> search(String text) {
         String textUp = text.toUpperCase();
 

@@ -43,9 +43,7 @@ public class ItemServiceImpl implements ItemService {
      */
     @Override
     public ItemDto add(ItemCreateDto itemCreateDto) {
-        User owner = userRepository.getById(itemCreateDto.getUserId())
-                .orElseThrow(() -> new NotFoundException("Пользователь не найден по userId = "
-                        + itemCreateDto.getUserId()));
+        User owner = checkUserId(itemCreateDto.getUserId());
         Item newItem = itemMapper.toItemOnCreate(itemCreateDto, owner);
         newItem = itemRepository.add(newItem);
 
@@ -117,11 +115,11 @@ public class ItemServiceImpl implements ItemService {
      *
      * @param userId проверяемый идентификатор пользователя.
      */
-    private void checkUserId(long userId) {
+    private User checkUserId(long userId) {
         if (userId == 0) {
             throw new ValidationException("userId должен быть указан.");
         }
-        userRepository.getById(userId)
+        return userRepository.getById(userId)
                 .orElseThrow(() -> new NotFoundException("Пользователь не найден по userId = " + userId));
     }
 }

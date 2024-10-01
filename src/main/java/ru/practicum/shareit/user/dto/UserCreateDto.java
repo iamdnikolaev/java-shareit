@@ -21,11 +21,12 @@ import lombok.ToString;
 @NoArgsConstructor
 public class UserCreateDto {
 
-    @Size(max = 32, message = "Максимальная длина имени - 32 символа.")
+    @Size(min = 1, max = 32, message = "Максимальная длина имени - 32 символа.")
     @NotBlank(message = "Имя/логин не может быть пустым")
     private String name;
 
     @NotBlank(message = "Электронная почта не может быть пустой и должна содержать символ @.")
     @Email(message = "Электронная почта не может быть пустой и должна содержать символ @.")
+    @Size(min = 5, max = 32, message = "Максимальная длина адреса электронной почты - 32 символа, минимальная - 5.")
     private String email;
 }
