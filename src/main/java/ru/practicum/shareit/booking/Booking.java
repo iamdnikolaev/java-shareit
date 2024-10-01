@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.user.User;
 
 import java.time.LocalDateTime;
 
@@ -31,24 +32,26 @@ public class Booking {
     /**
      * Дата и время начала бронирования.
      */
+    @NotNull(message = "Необходимо указать дату начала бронирования.")
     private LocalDateTime start;
 
     /**
      * Дата и время конца бронирования.
      */
+    @NotNull(message = "Необходимо указать дату конца бронирования.")
     private LocalDateTime end;
 
     /**
-     * Id вещи, которую бронирует пользователь {@link Item#getId()}.
+     * Вещь, которую бронирует пользователь {@link Item}.
      */
     @NotNull(message = "Необходимо указать вещь для бронирования.")
-    private Long item;
+    private Item item;
 
     /**
-     * Id осуществляющего бронирование пользователя {@link ru.practicum.shareit.user.User#getId()}.
+     * Осуществляющий бронирование пользователь {@link ru.practicum.shareit.user.User}.
      */
     @NotNull(message = "Необходимо указать пользователя, осуществляющего бронирование.")
-    private Long booker;
+    private User booker;
 
     /**
      * Статус бронирования {@link BookingStatus}

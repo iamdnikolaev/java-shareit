@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import ru.practicum.shareit.request.ItemRequest;
+import ru.practicum.shareit.user.User;
 
 /**
  * Вещь, которой можно поделиться.
@@ -29,32 +30,33 @@ public class Item {
     private Long id;
 
     /**
-     * Краткое названия.
+     * Краткое название.
      */
-    @Size(max = 100, message = "Максимальная краткого названия - 100 символов.")
-    @NotNull(message = "Название не может быть пустым")
-    @NotBlank(message = "Название не может быть пустым")
+    @Size(max = 100, message = "Максимальная длина краткого названия - 100 символов.")
+    @NotBlank(message = "Название не может быть пустым.")
     private String name;
 
     /**
      * Развернутое описание.
      */
     @Size(max = 255, message = "Максимальная длина описания - 255 символов.")
+    @NotBlank(message = "Описание не может быть пустым.")
     private String description;
 
     /**
      * Статус доступности вещи для аренды.
      */
+    @NotNull(message = "Необходимо указать (не)доступность явно.")
     private Boolean available;
 
     /**
-     * Id владельца вещи {@link ru.practicum.shareit.user.User#getId()}.
+     * Владелец вещи {@link ru.practicum.shareit.user.User}.
      */
     @NotNull(message = "Необходимо указать владельца вещи.")
-    private Long owner;
+    private User owner;
 
     /**
-     * Id запроса на создание вещи {@link ItemRequest#getId()}.
+     * Запрос на создание вещи {@link ItemRequest}.
      */
-    private Long request;
+    private ItemRequest request;
 }

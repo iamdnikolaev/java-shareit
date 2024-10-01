@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import ru.practicum.shareit.user.User;
 
 import java.time.LocalDateTime;
 
@@ -33,15 +34,14 @@ public class ItemRequest {
      * Текст запроса, содержащий описание требуемой вещи.
      */
     @Size(max = 255, message = "Максимальная длина текста запроса - 255 символов.")
-    @NotNull(message = "Запрос не может быть пустым.")
     @NotBlank(message = "Запрос не может быть пустым.")
     private String description;
 
     /**
-     * Id пользователя, создавшего запрос {@link ru.practicum.shareit.user.User#getId()}.
+     * Пользователь, создавший запрос {@link ru.practicum.shareit.user.User}.
      */
     @NotNull(message = "Необходимо указать создателя запроса.")
-    private Long requestor;
+    private User requestor;
 
     /**
      * Дата и временя создания запроса.
