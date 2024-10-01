@@ -11,9 +11,9 @@ import java.util.List;
 public interface ItemMapper {
     public ItemDto toItemDto(Item item);
 
-    public Item toItemOnCreate (ItemCreateDto itemCreateDto, User owner);
+    public Item toItemOnCreate(ItemCreateDto itemCreateDto, User owner);
 
-    public void toItemOnUpdate (Item item, ItemUpdateDto itemUpdateDto);
+    public void toItemOnUpdate(Item item, ItemUpdateDto itemUpdateDto);
 
     public List<ItemDto> toItemDtoList(List<Item> items);
 }

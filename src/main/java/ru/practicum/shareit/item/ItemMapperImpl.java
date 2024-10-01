@@ -38,7 +38,7 @@ public class ItemMapperImpl implements ItemMapper {
      * @param owner пользователь-владелец вещи.
      * @return Объект для вывода данных.
      */
-    public Item toItemOnCreate (ItemCreateDto itemCreateDto, User owner) {
+    public Item toItemOnCreate(ItemCreateDto itemCreateDto, User owner) {
         return Item.builder()
                 .name(itemCreateDto.getName())
                 .description(itemCreateDto.getDescription())
@@ -52,7 +52,7 @@ public class ItemMapperImpl implements ItemMapper {
      * @param item описание вещи для изменения;
      * @param itemUpdateDto объект с данными для изменения.
      */
-    public void toItemOnUpdate (Item item, ItemUpdateDto itemUpdateDto) {
+    public void toItemOnUpdate(Item item, ItemUpdateDto itemUpdateDto) {
         if (itemUpdateDto.getName() != null) {
             item.setName(itemUpdateDto.getName());
         }

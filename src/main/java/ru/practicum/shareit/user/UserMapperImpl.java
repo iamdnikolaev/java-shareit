@@ -28,7 +28,7 @@ public class UserMapperImpl implements UserMapper {
      * @param userCreateDto объект с данными для создания;
      * @return Объект для вывода данных.
      */
-    public User toUserOnCreate (UserCreateDto userCreateDto) {
+    public User toUserOnCreate(UserCreateDto userCreateDto) {
         return User.builder()
                 .name(userCreateDto.getName())
                 .email(userCreateDto.getEmail())
@@ -40,7 +40,7 @@ public class UserMapperImpl implements UserMapper {
      * @param user описание пользователя для изменения;
      * @param userUpdateDto объект с данными для изменения.
      */
-    public void toUserOnUpdate (User user, UserUpdateDto userUpdateDto) {
+    public void toUserOnUpdate(User user, UserUpdateDto userUpdateDto) {
         if (userUpdateDto.getName() != null) {
             user.setName(userUpdateDto.getName());
         }
