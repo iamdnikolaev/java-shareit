@@ -14,8 +14,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import ru.practicum.shareit.item.dto.CommentCreateDto;
+import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemCreateDto;
 import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.dto.ItemDtoBookingDatesComments;
 import ru.practicum.shareit.item.dto.ItemUpdateDto;
 
 import java.util.List;
@@ -36,11 +39,12 @@ public class ItemController {
     /**
      * Сервис по работе с вещами.
      */
-    private final ItemServiceImpl itemService;
+    private final ItemService itemService;
 
     /**
      * Метод добавления вещи.
-     * @param userId идентификатор добавляющего вещь пользователя;
+     *
+     * @param userId        идентификатор добавляющего вещь пользователя;
      * @param itemCreateDto атрибуты вещи для добавления.
      * @return Данные по добавленной вещи.
      */
@@ -58,8 +62,9 @@ public class ItemController {
 
     /**
      * Метод изменения вещи.
-     * @param userId идентификатор изменяющего вещь пользователя;
-     * @param itemId идентификатор вещи для изменения;
+     *
+     * @param userId        идентификатор изменяющего вещь пользователя;
+     * @param itemId        идентификатор вещи для изменения;
      * @param itemUpdateDto атрибуты вещи для изменения.
      * @return Данные по измененной вещи.
      */
@@ -78,14 +83,15 @@ public class ItemController {
 
     /**
      * Метод получения данных по вещи.
+     *
      * @param userId идентификатор пользователя для получения данных;
      * @param itemId идентификатор вещи для запроса;
      * @return Данные по найденной вещи.
      */
     @GetMapping("/{itemId}")
-    public ItemDto get(@RequestHeader(SHARER_USER_ID) long userId, @PathVariable long itemId) {
+    public ItemDtoBookingDatesComments get(@RequestHeader(SHARER_USER_ID) long userId, @PathVariable long itemId) {
         log.info("==> get by userId = {}, itemId = {}", userId, itemId);
-        ItemDto itemDto = itemService.getById(itemId);
+        ItemDtoBookingDatesComments itemDto = itemService.getById(itemId);
         log.info("<== {}", itemDto);
 
         return itemDto;
@@ -93,13 +99,14 @@ public class ItemController {
 
     /**
      * Метод получения вещей владельца.
+     *
      * @param userId идентификатор владельца для получения данных;
      * @return Список данных по вещам.
      */
     @GetMapping
-    public List<ItemDto> findAllByOwnerId(@RequestHeader(SHARER_USER_ID) long userId) {
+    public List<ItemDtoBookingDatesComments> findAllByOwnerId(@RequestHeader(SHARER_USER_ID) long userId) {
         log.info("==> findAllByOwnerId by userId = {}", userId);
-        List<ItemDto> itemsDto = itemService.findAllByOwnerId(userId);
+        List<ItemDtoBookingDatesComments> itemsDto = itemService.findAllByOwnerId(userId);
         log.info("<== {}", itemsDto);
 
         return itemsDto;
@@ -107,8 +114,9 @@ public class ItemController {
 
     /**
      * Метод поиска вещей, доступных для аренды, по названию и/или описанию.
+     *
      * @param userId идентификатор владельца для получения данных;
-     * @param text строка поиска.
+     * @param text   строка поиска.
      * @return Список данных по вещам.
      */
     @GetMapping("/search")
@@ -120,4 +128,26 @@ public class ItemController {
         return itemsDto;
     }
 
+    /**
+     * Метод добавления отзыва о вещи после аренды.
+     *
+     * @param userId           идентификатор пользователя;
+     * @param itemId           идентификатор вещи;
+     * @param commentCreateDto атрибуты отзыва для добавления.
+     * @return Данные по добавленному отзыву.
+     */
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping("/{itemId}/comment")
+    public CommentDto addComment(@RequestHeader(SHARER_USER_ID) long userId,
+                                 @PathVariable long itemId,
+                                 @Valid @RequestBody CommentCreateDto commentCreateDto) {
+        log.info("==> addComment by userId = {}, itemId = {}, commentCreateDto = {}", userId, itemId, commentCreateDto);
+        commentCreateDto.setItemId(itemId);
+        commentCreateDto.setAuthorId(userId);
+        CommentDto commentDto = itemService.addComment(commentCreateDto);
+        log.info("<== {}", commentDto);
+
+        return commentDto;
+
+    }
 }

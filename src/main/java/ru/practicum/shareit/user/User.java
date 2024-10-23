@@ -1,8 +1,11 @@
 package ru.practicum.shareit.user;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -14,6 +17,8 @@ import lombok.ToString;
 /**
  * Пользователь сервиса.
  */
+@Entity
+@Table(name = "users")
 @Setter
 @Getter
 @ToString
@@ -25,19 +30,20 @@ public class User {
     /**
      * Уникальный идентификатор пользователя.
      */
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
     private Long id;
 
     /**
      * Имя или логин пользователя.
      */
-    @Size(max = 32, message = "Максимальная длина имени - 32 символа.")
-    @NotBlank(message = "Имя/логин не может быть пустым")
+    @Column(name = "name")
     private String name;
 
     /**
      * Адрес электронной почты.
      */
-    @NotBlank(message = "Электронная почта не может быть пустой и должна содержать символ @.")
-    @Email(message = "Электронная почта не может быть пустой и должна содержать символ @.")
+    @Column(name = "email")
     private String email;
 }
