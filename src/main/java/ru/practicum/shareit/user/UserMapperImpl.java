@@ -12,6 +12,7 @@ import ru.practicum.shareit.user.dto.UserUpdateDto;
 public class UserMapperImpl implements UserMapper {
     /**
      * Метод преобразования выходных данных по пользователю.
+     *
      * @param user пользователь для вывода.
      * @return Объект для вывода данных.
      */
@@ -25,6 +26,7 @@ public class UserMapperImpl implements UserMapper {
 
     /**
      * Метод использования входных данных при создании пользователя.
+     *
      * @param userCreateDto объект с данными для создания;
      * @return Объект для вывода данных.
      */
@@ -37,7 +39,8 @@ public class UserMapperImpl implements UserMapper {
 
     /**
      * Метод использования входных данных при изменении пользователя.
-     * @param user описание пользователя для изменения;
+     *
+     * @param user          описание пользователя для изменения;
      * @param userUpdateDto объект с данными для изменения.
      */
     public void toUserOnUpdate(User user, UserUpdateDto userUpdateDto) {

@@ -19,10 +19,10 @@ import lombok.ToString;
 public class UserUpdateDto {
     private Long id;
 
-    @Size(min = 1, max = 32, message = "Максимальная длина имени - 32 символа.")
+    @Size(min = 1, max = 255, message = "Максимальная длина имени - 255 символов.")
     private String name;
 
     @Email(message = "Электронная почта не может быть пустой и должна содержать символ @.")
-    @Size(min = 5, max = 32, message = "Максимальная длина адреса электронной почты - 32 символа, минимальная - 5.")
+    @Size(min = 5, max = 100, message = "Максимальная длина адреса электронной почты - 100 символов, минимальная - 5.")
     private String email;
 }
