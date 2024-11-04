@@ -12,8 +12,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 
     @Query(value = "select count(b) " +
             "from Booking b " +
-            "join b.item i " +
-            "where i.id = :itemId " +
+            "where b.item.id = :itemId " +
             "and b.start < :end " +
             "and b.end > :start " +
             "and b.status not in (REJECTED, CANCELED)")
@@ -21,10 +20,9 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
                        @Param("start") LocalDateTime start,
                        @Param("end") LocalDateTime end);
 
-    @Query(value = "select o.id " +
+    @Query(value = "select i.owner.id " +
             "from Booking b " +
             "join b.item i " +
-            "join i.owner o " +
             "where b.id = :bookingId")
     Long getItemOwnerId(@Param("bookingId") long bookingId);
 
@@ -87,44 +85,39 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 
     @Query(value = "select b from Booking b " +
             "join fetch b.item i " +
-            "join i.owner o " +
             "join fetch b.booker bo " +
-            "where o.id = :ownerId " +
+            "where i.owner.id = :ownerId " +
             "order by b.start desc")
     List<Booking> findAllBookingsByOwnerId(@Param("ownerId") long ownerId);
 
     @Query(value = "select b from Booking b " +
             "join fetch b.item i " +
-            "join i.owner o " +
             "join fetch b.booker bo " +
-            "where o.id = :ownerId " +
+            "where i.owner.id = :ownerId " +
             "and :onTime between b.start and b.end " +
             "order by b.start desc")
     List<Booking> findCurrentBookingsByOwnerId(@Param("ownerId") long ownerId, @Param("onTime") LocalDateTime onTime);
 
     @Query(value = "select b from Booking b " +
             "join fetch b.item i " +
-            "join i.owner o " +
             "join fetch b.booker bo " +
-            "where o.id = :ownerId " +
+            "where i.owner.id = :ownerId " +
             "and b.end < :onTime " +
             "order by b.start desc")
     List<Booking> findPastBookingsByOwnerId(@Param("ownerId") long ownerId, @Param("onTime") LocalDateTime onTime);
 
     @Query(value = "select b from Booking b " +
             "join fetch b.item i " +
-            "join i.owner o " +
             "join fetch b.booker bo " +
-            "where o.id = :ownerId " +
+            "where i.owner.id = :ownerId " +
             "and b.start > :onTime " +
             "order by b.start desc")
     List<Booking> findFutureBookingsByOwnerId(@Param("ownerId") long ownerId, @Param("onTime") LocalDateTime onTime);
 
     @Query(value = "select b from Booking b " +
             "join fetch b.item i " +
-            "join i.owner o " +
             "join fetch b.booker bo " +
-            "where o.id = :ownerId " +
+            "where i.owner.id = :ownerId " +
             "and b.status in :statusList " +
             "order by b.start desc")
     List<Booking> findBookingsByOwnerIdAndStatus(@Param("ownerId") long ownerId,
@@ -137,8 +130,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             "and b.start < :onTime " +
             "and b.start = (select max(b1.start) " +
             "  from Booking b1 " +
-            "  join b1.item i1 " +
-            "  where i1.id = i.id " +
+            "  where b1.item.id = b.item.id " +
             "  and b1.start < :onTime)")
     List<Booking> lastBookingsByItemIds(@Param("itemIds") List<Long> itemIds, @Param("onTime") LocalDateTime onTime);
 
@@ -149,8 +141,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             "and b.start > :onTime " +
             "and b.start = (select min(b1.start) " +
             "  from Booking b1 " +
-            "  join b1.item i1 " +
-            "  where i1.id = i.id " +
+            "  where b1.item.id = b.item.id " +
             "  and b1.start > :onTime)")
     List<Booking> nearestBookingsByItemIds(@Param("itemIds") List<Long> itemIds, @Param("onTime") LocalDateTime onTime);
 }
