@@ -32,5 +32,7 @@ public class ItemCreateDto {
     @NotNull(message = "Необходимо указать (не)доступность явно.")
     private Boolean available;
 
+    private Long requestId;
+
     private Long userId;
 }

@@ -17,6 +17,8 @@ import ru.practicum.shareit.item.dto.ItemDtoBookingDatesComments;
 import ru.practicum.shareit.item.dto.ItemUpdateDto;
 import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.request.ItemRequest;
+import ru.practicum.shareit.request.ItemRequestRepository;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserRepository;
 
@@ -53,6 +55,12 @@ public class ItemServiceImpl implements ItemService {
      * Хранилище отзывов о вещах.
      */
     private final CommentRepository commentRepository;
+
+    /**
+     * Хранилище запросов вещей.
+     */
+    private final ItemRequestRepository itemRequestRepository;
+
     /**
      * Преобразователь данных ввода-вывода по вещи.
      */
@@ -74,6 +82,14 @@ public class ItemServiceImpl implements ItemService {
     public ItemDto add(ItemCreateDto itemCreateDto) {
         User owner = checkUserId(itemCreateDto.getUserId());
         Item newItem = itemMapper.toItemOnCreate(itemCreateDto, owner);
+
+        if (itemCreateDto.getRequestId() != null) {
+            ItemRequest request = itemRequestRepository.findById(itemCreateDto.getRequestId())
+                    .orElseThrow(() -> new NotFoundException("Запрос не найден по requestID = "
+                            + itemCreateDto.getRequestId()));
+            newItem.setRequest(request);
+        }
+
         newItem = itemRepository.save(newItem);
 
         return itemMapper.toItemDto(newItem);
@@ -188,6 +204,7 @@ public class ItemServiceImpl implements ItemService {
      * @return Данные по добавленному отзыву.
      */
     @Transactional
+    @Override
     public CommentDto addComment(CommentCreateDto commentCreateDto) {
         Item item = checkItemId(commentCreateDto.getItemId());
         User author = checkUserId(commentCreateDto.getAuthorId());

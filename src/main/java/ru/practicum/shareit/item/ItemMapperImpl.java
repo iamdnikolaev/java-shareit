@@ -5,6 +5,7 @@ import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemCreateDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemDtoBookingDatesComments;
+import ru.practicum.shareit.item.dto.ItemResponseDto;
 import ru.practicum.shareit.item.dto.ItemUpdateDto;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.User;
@@ -25,7 +26,7 @@ public class ItemMapperImpl implements ItemMapper {
      * Метод преобразования выходных данных по вещи.
      *
      * @param item вещь для вывода.
-     * @return Объект для вывода данных.
+     * @return Объект для вывода данных по вещи.
      */
     public ItemDto toItemDto(Item item) {
         return ItemDto.builder()
@@ -42,7 +43,7 @@ public class ItemMapperImpl implements ItemMapper {
      *
      * @param itemCreateDto объект с данными для создания;
      * @param owner         пользователь-владелец вещи.
-     * @return Объект для вывода данных.
+     * @return Объект вещи после создания.
      */
     public Item toItemOnCreate(ItemCreateDto itemCreateDto, User owner) {
         return Item.builder()
@@ -87,10 +88,10 @@ public class ItemMapperImpl implements ItemMapper {
      * Метод преобразования выходных данных по вещам с указанием дат последнего и ближайшего
      * бронирования
      *
-     * @param items список вещей для вывода;
-     * @param lastBookingDates даты последних броней по вещам;
+     * @param items               список вещей для вывода;
+     * @param lastBookingDates    даты последних броней по вещам;
      * @param nearestBookingDates даты ближайших броней по вещам:
-     * @param commentsDtoMap отзывы о вещах.
+     * @param commentsDtoMap      отзывы о вещах.
      * @return Список объектов для вывода данных.
      */
     public List<ItemDtoBookingDatesComments> toItemDtoBookingDatesComments(List<Item> items,
@@ -128,5 +129,21 @@ public class ItemMapperImpl implements ItemMapper {
                 .requestId(item.getRequest() != null ? item.getRequest().getId() : 0)
                 .comments(comments)
                 .build();
+    }
+
+    /**
+     * Метод преобразования выходных данных о вещах по запросам их предоставления.
+     *
+     * @param items список вещей для вывода;
+     * @return Список объектов вещей для вывода данных.
+     */
+    public List<ItemResponseDto> toItemResponseDtoList(List<Item> items) {
+        return items.stream()
+                .map(item -> ItemResponseDto.builder()
+                        .itemId(item.getId())
+                        .name(item.getName())
+                        .ownerId(item.getOwner().getId())
+                        .build())
+                .collect(Collectors.toList());
     }
 }
