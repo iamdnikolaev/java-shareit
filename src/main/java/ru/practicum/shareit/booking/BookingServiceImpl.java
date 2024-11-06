@@ -145,26 +145,27 @@ public class BookingServiceImpl implements BookingService {
     public List<BookingDto> getBookingsByBooker(long bookerId, BookingState state) {
         checkUserId(bookerId);
 
-        if (state.equals(BookingState.ALL)) {
-            return bookingMapper.toBookingDtoList(bookingRepository.findAllBookingsByBookerId(bookerId));
-        } else if (state.equals(BookingState.CURRENT)) {
-            return bookingMapper.toBookingDtoList(bookingRepository.findCurrentBookingsByBookerId(bookerId,
-                    LocalDateTime.now()));
-        } else if (state.equals(BookingState.PAST)) {
-            return bookingMapper.toBookingDtoList(bookingRepository.findPastBookingsByBookerId(bookerId,
-                    LocalDateTime.now()));
-        } else if (state.equals(BookingState.FUTURE)) {
-            return bookingMapper.toBookingDtoList(bookingRepository.findFutureBookingsByBookerId(bookerId,
-                    LocalDateTime.now()));
-        } else if (state.equals(BookingState.WAITING)) {
-            return bookingMapper.toBookingDtoList(bookingRepository.findBookingsByBookerIdAndStatus(bookerId,
-                    List.of(BookingStatus.WAITING)));
-        } else if (state.equals(BookingState.REJECTED)) {
-            return bookingMapper.toBookingDtoList(bookingRepository.findBookingsByBookerIdAndStatus(bookerId,
-                    List.of(BookingStatus.REJECTED)));
-        } else {
-            throw new ValidationException("Указано неверное состояние для отбора бронирований.");
+        if (state != null) {
+            if (state.equals(BookingState.ALL)) {
+                return bookingMapper.toBookingDtoList(bookingRepository.findAllBookingsByBookerId(bookerId));
+            } else if (state.equals(BookingState.CURRENT)) {
+                return bookingMapper.toBookingDtoList(bookingRepository.findCurrentBookingsByBookerId(bookerId,
+                        LocalDateTime.now()));
+            } else if (state.equals(BookingState.PAST)) {
+                return bookingMapper.toBookingDtoList(bookingRepository.findPastBookingsByBookerId(bookerId,
+                        LocalDateTime.now()));
+            } else if (state.equals(BookingState.FUTURE)) {
+                return bookingMapper.toBookingDtoList(bookingRepository.findFutureBookingsByBookerId(bookerId,
+                        LocalDateTime.now()));
+            } else if (state.equals(BookingState.WAITING)) {
+                return bookingMapper.toBookingDtoList(bookingRepository.findBookingsByBookerIdAndStatus(bookerId,
+                        List.of(BookingStatus.WAITING)));
+            } else if (state.equals(BookingState.REJECTED)) {
+                return bookingMapper.toBookingDtoList(bookingRepository.findBookingsByBookerIdAndStatus(bookerId,
+                        List.of(BookingStatus.REJECTED)));
+            }
         }
+        throw new ValidationException("Указано неверное состояние для отбора бронирований.");
     }
 
     /**
@@ -177,26 +178,27 @@ public class BookingServiceImpl implements BookingService {
     public List<BookingDto> getBookingsByOwner(long ownerId, BookingState state) {
         checkUserId(ownerId);
 
-        if (state.equals(BookingState.ALL)) {
-            return bookingMapper.toBookingDtoList(bookingRepository.findAllBookingsByOwnerId(ownerId));
-        } else if (state.equals(BookingState.CURRENT)) {
-            return bookingMapper.toBookingDtoList(bookingRepository.findCurrentBookingsByOwnerId(ownerId,
-                    LocalDateTime.now()));
-        } else if (state.equals(BookingState.PAST)) {
-            return bookingMapper.toBookingDtoList(bookingRepository.findPastBookingsByOwnerId(ownerId,
-                    LocalDateTime.now()));
-        } else if (state.equals(BookingState.FUTURE)) {
-            return bookingMapper.toBookingDtoList(bookingRepository.findFutureBookingsByOwnerId(ownerId,
-                    LocalDateTime.now()));
-        } else if (state.equals(BookingState.WAITING)) {
-            return bookingMapper.toBookingDtoList(bookingRepository.findBookingsByOwnerIdAndStatus(ownerId,
-                    List.of(BookingStatus.WAITING)));
-        } else if (state.equals(BookingState.REJECTED)) {
-            return bookingMapper.toBookingDtoList(bookingRepository.findBookingsByOwnerIdAndStatus(ownerId,
-                    List.of(BookingStatus.REJECTED)));
-        } else {
-            throw new ValidationException("Указано неверное состояние для отбора бронирований.");
+        if (state != null) {
+            if (state.equals(BookingState.ALL)) {
+                return bookingMapper.toBookingDtoList(bookingRepository.findAllBookingsByOwnerId(ownerId));
+            } else if (state.equals(BookingState.CURRENT)) {
+                return bookingMapper.toBookingDtoList(bookingRepository.findCurrentBookingsByOwnerId(ownerId,
+                        LocalDateTime.now()));
+            } else if (state.equals(BookingState.PAST)) {
+                return bookingMapper.toBookingDtoList(bookingRepository.findPastBookingsByOwnerId(ownerId,
+                        LocalDateTime.now()));
+            } else if (state.equals(BookingState.FUTURE)) {
+                return bookingMapper.toBookingDtoList(bookingRepository.findFutureBookingsByOwnerId(ownerId,
+                        LocalDateTime.now()));
+            } else if (state.equals(BookingState.WAITING)) {
+                return bookingMapper.toBookingDtoList(bookingRepository.findBookingsByOwnerIdAndStatus(ownerId,
+                        List.of(BookingStatus.WAITING)));
+            } else if (state.equals(BookingState.REJECTED)) {
+                return bookingMapper.toBookingDtoList(bookingRepository.findBookingsByOwnerIdAndStatus(ownerId,
+                        List.of(BookingStatus.REJECTED)));
+            }
         }
+        throw new ValidationException("Указано неверное состояние для отбора бронирований.");
     }
 
     /**

@@ -83,7 +83,7 @@ public class ItemServiceImpl implements ItemService {
         User owner = checkUserId(itemCreateDto.getUserId());
         Item newItem = itemMapper.toItemOnCreate(itemCreateDto, owner);
 
-        if (itemCreateDto.getRequestId() != null) {
+        if (itemCreateDto.getRequestId() != null && itemCreateDto.getRequestId() != 0L) {
             ItemRequest request = itemRequestRepository.findById(itemCreateDto.getRequestId())
                     .orElseThrow(() -> new NotFoundException("Запрос не найден по requestID = "
                             + itemCreateDto.getRequestId()));
@@ -168,7 +168,8 @@ public class ItemServiceImpl implements ItemService {
             for (Comment comment : comments) {
                 List<CommentDto> itemCommentDtos = commentsDtoMap.get(comment.getItem().getId());
                 if (itemCommentDtos == null || itemCommentDtos.isEmpty()) {
-                    itemCommentDtos = List.of(commentMapper.toCommentDto(comment));
+                    itemCommentDtos = new ArrayList<>();
+                    itemCommentDtos.add(commentMapper.toCommentDto(comment));
                 } else {
                     itemCommentDtos.add(commentMapper.toCommentDto(comment));
                 }

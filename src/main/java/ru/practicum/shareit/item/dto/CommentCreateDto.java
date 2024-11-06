@@ -5,12 +5,14 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * Данные для добавления отзыва о вещи {@link ru.practicum.shareit.item.model.Item}
  */
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 public class CommentCreateDto {
     @Size(max = 1000, message = "Максимальная длина описания - 1000 символов.")
