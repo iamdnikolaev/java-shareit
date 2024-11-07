@@ -17,7 +17,6 @@ import ru.practicum.shareit.item.dto.ItemCreateDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemUpdateDto;
 import ru.practicum.shareit.request.ItemRequestRepository;
-import ru.practicum.shareit.request.ItemRequestService;
 import ru.practicum.shareit.user.UserRepository;
 import ru.practicum.shareit.user.UserService;
 import ru.practicum.shareit.user.dto.UserCreateDto;
@@ -38,7 +37,6 @@ class BookingServiceTest {
     private final ItemService itemService;
     private final UserService userService;
     private final BookingService bookingService;
-    private final ItemRequestService itemRequestService;
 
     private final BookingRepository bookingRepository;
     private final CommentRepository commentRepository;

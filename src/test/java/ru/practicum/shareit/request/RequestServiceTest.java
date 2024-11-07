@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.practicum.shareit.booking.BookingRepository;
-import ru.practicum.shareit.booking.BookingService;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.item.CommentRepository;
@@ -35,7 +34,6 @@ class RequestServiceTest {
 
     private final ItemService itemService;
     private final UserService userService;
-    private final BookingService bookingService;
     private final ItemRequestService itemRequestService;
 
     private final BookingRepository bookingRepository;
