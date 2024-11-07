@@ -236,9 +236,6 @@ public class ItemServiceImpl implements ItemService {
      * @return Найденный пользователь
      */
     private User checkUserId(long userId) {
-        if (userId == 0) {
-            throw new ValidationException("userId должен быть указан.");
-        }
         return userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("Пользователь не найден по userId = " + userId));
     }
@@ -250,9 +247,6 @@ public class ItemServiceImpl implements ItemService {
      * @return Найденная вещь
      */
     private Item checkItemId(long itemId) {
-        if (itemId == 0) {
-            throw new ValidationException("itemId должен быть указан.");
-        }
         return itemRepository.findById(itemId)
                 .orElseThrow(() -> new NotFoundException("Вещь не найдена по itemId = " + itemId));
     }

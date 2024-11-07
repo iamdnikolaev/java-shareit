@@ -1,6 +1,7 @@
 package ru.practicum.shareit.request;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -39,7 +40,7 @@ public class ItemRequestController {
      */
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public ResponseEntity<Object> add(@RequestHeader(SHARER_USER_ID) Long userId,
+    public ResponseEntity<Object> add(@RequestHeader(SHARER_USER_ID) @Positive long userId,
                                       @Valid @RequestBody ItemRequestCreateDto itemRequestCreateDto) {
         log.info("==> add userId = {}, itemRequestCreateDto = {}", userId, itemRequestCreateDto);
         itemRequestCreateDto.setUserId(userId);
@@ -56,7 +57,7 @@ public class ItemRequestController {
      * @return Список данных по запросах вещей с ответами.
      */
     @GetMapping
-    public ResponseEntity<Object> getRequestsByRequestorId(@RequestHeader(SHARER_USER_ID) Long userId) {
+    public ResponseEntity<Object> getRequestsByRequestorId(@RequestHeader(SHARER_USER_ID) @Positive long userId) {
         log.info("==> getRequestsByRequestorId userId = {}", userId);
         ResponseEntity<Object> itemRequestDtos = itemRequestClient.getRequestsByRequestorId(userId);
         log.info("<== getRequestsByRequestorId {}", itemRequestDtos);
@@ -71,7 +72,7 @@ public class ItemRequestController {
      * @return Список данных по запросах вещей с ответами.
      */
     @GetMapping("/all")
-    public ResponseEntity<Object> getRequestsByOtherUsers(@RequestHeader(SHARER_USER_ID) Long userId) {
+    public ResponseEntity<Object> getRequestsByOtherUsers(@RequestHeader(SHARER_USER_ID) @Positive long userId) {
         log.info("==> getRequestsByOtherUsers userId = {}", userId);
         ResponseEntity<Object> itemRequestDtos = itemRequestClient.getRequestsByOtherUsers(userId);
         log.info("<== getRequestsByOtherUsers {}", itemRequestDtos);
@@ -87,7 +88,7 @@ public class ItemRequestController {
      * @return Данные по запросу вещи с ответами на него.
      */
     @GetMapping("/{requestId}")
-    public ResponseEntity<Object> getById(@RequestHeader(SHARER_USER_ID) Long userId,
+    public ResponseEntity<Object> getById(@RequestHeader(SHARER_USER_ID) @Positive long userId,
                                           @PathVariable long requestId) {
         log.info("==> getById userId = {}, requestId = {}", userId, requestId);
         ResponseEntity<Object> itemRequestDto = itemRequestClient.getById(userId, requestId);

@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.practicum.shareit.booking.BookingRepository;
 import ru.practicum.shareit.exception.NotFoundException;
-import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.item.CommentRepository;
 import ru.practicum.shareit.item.ItemRepository;
 import ru.practicum.shareit.item.ItemService;
@@ -86,13 +85,6 @@ class RequestServiceTest {
 
         assertThat(requestDtos).isNotNull();
         assertThat(requestDtos).hasSize(3);
-    }
-
-    @Test
-    void getRequestsByRequestorIdZero() {
-        assertThrows(ValidationException.class, () -> {
-            itemRequestService.getRequestsByRequestorId(0L);
-        }, "Requestor cannot be found by id = 0");
     }
 
     @Test

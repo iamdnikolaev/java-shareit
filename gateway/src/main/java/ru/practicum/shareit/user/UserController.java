@@ -1,6 +1,7 @@
 package ru.practicum.shareit.user;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -54,7 +55,7 @@ public class UserController {
      * @return Данные по измененному пользователю.
      */
     @PatchMapping("/{userId}")
-    public ResponseEntity<Object> update(@PathVariable long userId,
+    public ResponseEntity<Object> update(@PathVariable @Positive long userId,
                                          @Valid @RequestBody UserUpdateDto userUpdateDto) {
         log.info("==> update by userId = {}, userUpdateDto = {}", userId, userUpdateDto);
         userUpdateDto.setId(userId);
@@ -71,7 +72,7 @@ public class UserController {
      * @return Данные по найденному пользователю.
      */
     @GetMapping("/{userId}")
-    public ResponseEntity<Object> get(@PathVariable long userId) {
+    public ResponseEntity<Object> get(@PathVariable @Positive long userId) {
         log.info("==> get by userId = {}", userId);
         ResponseEntity<Object> userDto = userClient.getById(userId);
         log.info("<== {}", userDto);
@@ -86,7 +87,7 @@ public class UserController {
      */
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{userId}")
-    public ResponseEntity<Object> delete(@PathVariable long userId) {
+    public ResponseEntity<Object> delete(@PathVariable @Positive long userId) {
         log.info("==> delete for userId = {}", userId);
         return userClient.delete(userId);
     }

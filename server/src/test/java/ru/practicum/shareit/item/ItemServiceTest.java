@@ -144,14 +144,6 @@ class ItemServiceTest {
     }
 
     @Test
-    void getByIdZero() {
-        assertThrows(ValidationException.class, () -> {
-            itemService.getById(0L);
-        }, "Item cannot be found by id = 0");
-
-    }
-
-    @Test
     void getByIdWrong() {
         assertThrows(NotFoundException.class, () -> {
             itemService.getById(99999L);
@@ -178,14 +170,6 @@ class ItemServiceTest {
         List<ItemDtoBookingDatesComments> items = itemService.findAllByOwnerId(userDto.getId());
 
         assertThat(items).hasSize(0);
-    }
-
-    @Test
-    void findAllByOwnerIdZero() {
-        assertThrows(ValidationException.class, () -> {
-            itemService.findAllByOwnerId(0L);
-        }, "Owner cannot be found by id = 0");
-
     }
 
     @Test

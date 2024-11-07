@@ -1,6 +1,7 @@
 package ru.practicum.shareit.booking;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import ru.practicum.shareit.booking.dto.BookingCreateDto;
+import ru.practicum.shareit.exception.ValidationException;
 
 import static ru.practicum.shareit.util.Const.SHARER_USER_ID;
 
@@ -32,9 +34,16 @@ public class BookingController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Object> add(@RequestHeader(SHARER_USER_ID) long userId,
+    public ResponseEntity<Object> add(@RequestHeader(SHARER_USER_ID) @Positive long userId,
                                       @Valid @RequestBody BookingCreateDto bookingCreateDto) {
         log.info("==> add userId = {}, bookingCreateDto = {}", userId, bookingCreateDto);
+        if (bookingCreateDto.getStart().equals(bookingCreateDto.getEnd())) {
+            throw new ValidationException("Начало бронирования по дате/времени не может совпадать с его окончанием");
+        }
+        if (!bookingCreateDto.getEnd().isAfter(bookingCreateDto.getStart())) {
+            throw new ValidationException("Окончание бронирования должно быть после даты/времени его начала");
+        }
+
         bookingCreateDto.setUserId(userId);
         ResponseEntity<Object> bookingDto = bookingClient.add(bookingCreateDto);
         log.info("<== {}", bookingDto);
@@ -43,8 +52,8 @@ public class BookingController {
     }
 
     @PatchMapping("/{bookingId}")
-    public ResponseEntity<Object> approve(@RequestHeader(SHARER_USER_ID) long userId,
-                                          @PathVariable long bookingId,
+    public ResponseEntity<Object> approve(@RequestHeader(SHARER_USER_ID) @Positive long userId,
+                                          @PathVariable @Positive long bookingId,
                                           @RequestParam Boolean approved) {
         log.info("==> approve userId = {}, bookingId = {}, approved = {}", userId, bookingId, approved);
         ResponseEntity<Object> bookingDto = bookingClient.approve(userId, bookingId, approved);
@@ -54,8 +63,8 @@ public class BookingController {
     }
 
     @GetMapping("/{bookingId}")
-    public ResponseEntity<Object> get(@RequestHeader(SHARER_USER_ID) long userId,
-                                      @PathVariable long bookingId) {
+    public ResponseEntity<Object> get(@RequestHeader(SHARER_USER_ID) @Positive long userId,
+                                      @PathVariable @Positive long bookingId) {
         log.info("==> get userId = {}, bookingId = {}", userId, bookingId);
         ResponseEntity<Object> bookingDto = bookingClient.getById(userId, bookingId);
         log.info("<== {}", bookingDto);
@@ -64,7 +73,7 @@ public class BookingController {
     }
 
     @GetMapping
-    public ResponseEntity<Object> getBookingsByBooker(@RequestHeader(SHARER_USER_ID) long userId,
+    public ResponseEntity<Object> getBookingsByBooker(@RequestHeader(SHARER_USER_ID) @Positive long userId,
                                                       @RequestParam(name = "state", defaultValue = "ALL")
                                                       BookingState state) {
         log.info("==> getBookingsByBooker userId = {}, state = {}", userId, state);
@@ -75,7 +84,7 @@ public class BookingController {
     }
 
     @GetMapping("/owner")
-    public ResponseEntity<Object> getBookingsByOwner(@RequestHeader(SHARER_USER_ID) long userId,
+    public ResponseEntity<Object> getBookingsByOwner(@RequestHeader(SHARER_USER_ID) @Positive long userId,
                                                      @RequestParam(name = "state", defaultValue = "ALL")
                                                      BookingState state) {
         log.info("==> getBookingsByOwner userId = {}, state = {}", userId, state);

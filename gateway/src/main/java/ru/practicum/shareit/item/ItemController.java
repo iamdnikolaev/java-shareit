@@ -1,6 +1,7 @@
 package ru.practicum.shareit.item;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -43,7 +44,7 @@ public class ItemController {
      */
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public ResponseEntity<Object> add(@RequestHeader(SHARER_USER_ID) long userId,
+    public ResponseEntity<Object> add(@RequestHeader(SHARER_USER_ID) @Positive long userId,
                                       @Valid @RequestBody ItemCreateDto itemCreateDto) {
         log.info("==> add userId = {}, itemCreateDto = {}", userId, itemCreateDto);
         itemCreateDto.setUserId(userId);
@@ -62,8 +63,8 @@ public class ItemController {
      * @return Данные по измененной вещи.
      */
     @PatchMapping("/{itemId}")
-    public ResponseEntity<Object> update(@RequestHeader(SHARER_USER_ID) long userId,
-                                         @PathVariable long itemId,
+    public ResponseEntity<Object> update(@RequestHeader(SHARER_USER_ID) @Positive long userId,
+                                         @PathVariable @Positive long itemId,
                                          @Valid @RequestBody ItemUpdateDto itemUpdateDto) {
         log.info("==> update userId = {}, itemId = {}, itemUpdateDto = {}", userId, itemId, itemUpdateDto);
         itemUpdateDto.setId(itemId);
@@ -82,7 +83,8 @@ public class ItemController {
      * @return Данные по найденной вещи.
      */
     @GetMapping("/{itemId}")
-    public ResponseEntity<Object> get(@RequestHeader(SHARER_USER_ID) long userId, @PathVariable long itemId) {
+    public ResponseEntity<Object> get(@RequestHeader(SHARER_USER_ID) @Positive long userId,
+                                      @PathVariable @Positive long itemId) {
         log.info("==> get by userId = {}, itemId = {}", userId, itemId);
         ResponseEntity<Object> itemDto = itemClient.getById(userId, itemId);
         log.info("<== {}", itemDto);
@@ -97,7 +99,7 @@ public class ItemController {
      * @return Список данных по вещам.
      */
     @GetMapping
-    public ResponseEntity<Object> findAllByOwnerId(@RequestHeader(SHARER_USER_ID) long userId) {
+    public ResponseEntity<Object> findAllByOwnerId(@RequestHeader(SHARER_USER_ID) @Positive long userId) {
         log.info("==> findAllByOwnerId by userId = {}", userId);
         ResponseEntity<Object> itemsDto = itemClient.findAllByOwnerId(userId);
         log.info("<== {}", itemsDto);
@@ -113,7 +115,8 @@ public class ItemController {
      * @return Список данных по вещам.
      */
     @GetMapping("/search")
-    public ResponseEntity<Object> search(@RequestHeader(SHARER_USER_ID) long userId, @RequestParam String text) {
+    public ResponseEntity<Object> search(@RequestHeader(SHARER_USER_ID) @Positive long userId,
+                                         @RequestParam String text) {
         log.info("==> search by userId = {}, text = {}", userId, text);
         ResponseEntity<Object> itemsDto = itemClient.search(text, userId);
         log.info("<== {}", itemsDto);
@@ -131,8 +134,8 @@ public class ItemController {
      */
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/{itemId}/comment")
-    public ResponseEntity<Object> addComment(@RequestHeader(SHARER_USER_ID) long userId,
-                                             @PathVariable long itemId,
+    public ResponseEntity<Object> addComment(@RequestHeader(SHARER_USER_ID) @Positive long userId,
+                                             @PathVariable @Positive long itemId,
                                              @Valid @RequestBody CommentCreateDto commentCreateDto) {
         log.info("==> addComment by userId = {}, itemId = {}, commentCreateDto = {}", userId, itemId, commentCreateDto);
         commentCreateDto.setItemId(itemId);
@@ -141,6 +144,5 @@ public class ItemController {
         log.info("<== {}", commentDto);
 
         return commentDto;
-
     }
 }

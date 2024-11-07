@@ -54,12 +54,6 @@ public class BookingServiceImpl implements BookingService {
     @Override
     @Transactional
     public BookingDto add(BookingCreateDto bookingCreateDto) {
-        if (bookingCreateDto.getStart().equals(bookingCreateDto.getEnd())) {
-            throw new ValidationException("Начало бронирования по дате/времени не может совпадать с его окончанием");
-        }
-        if (!bookingCreateDto.getEnd().isAfter(bookingCreateDto.getStart())) {
-            throw new ValidationException("Окончание бронирования должно быть после даты/времени его начала");
-        }
         long crossingCount = bookingRepository.crossingCount(bookingCreateDto.getItemId(),
                 bookingCreateDto.getStart(),
                 bookingCreateDto.getEnd());
@@ -208,9 +202,6 @@ public class BookingServiceImpl implements BookingService {
      * @return Найденный пользователь
      */
     private User checkUserId(long userId) {
-        if (userId == 0) {
-            throw new ValidationException("userId должен быть указан.");
-        }
         return userRepository.findById(userId)
                 .orElseThrow(() -> new ForbiddenException("Пользователь не найден по userId = " + userId));
     }
@@ -222,9 +213,6 @@ public class BookingServiceImpl implements BookingService {
      * @return Найденное бронирование
      */
     private Booking checkBookingId(long bookingId) {
-        if (bookingId == 0) {
-            throw new ValidationException("bookingId должен быть указан.");
-        }
         return bookingRepository.getBookingById(bookingId)
                 .orElseThrow(() -> new NotFoundException("Бронирование не найдено по bookingId = " + bookingId));
     }

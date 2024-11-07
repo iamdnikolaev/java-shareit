@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.exception.NotFoundException;
-import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.item.ItemMapper;
 import ru.practicum.shareit.item.ItemRepository;
 import ru.practicum.shareit.request.dto.ItemRequestCreateDto;
@@ -122,9 +121,6 @@ public class ItemRequestServiceImpl implements ItemRequestService {
      * @return Найденный пользователь
      */
     private User checkUserId(long userId) {
-        if (userId == 0) {
-            throw new ValidationException("userId должен быть указан.");
-        }
         return userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("Пользователь не найден по userId = " + userId));
     }

@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.practicum.shareit.booking.dto.BookingCreateDto;
 import ru.practicum.shareit.booking.dto.BookingDto;
-import ru.practicum.shareit.exception.ConflictException;
 import ru.practicum.shareit.exception.ForbiddenException;
 import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.item.CommentRepository;
@@ -100,29 +99,6 @@ class BookingServiceTest {
     }
 
     @Test
-    void addNewBookingWrongDates() {
-        assertThrows(ValidationException.class, () -> {
-            bookingService.add(new BookingCreateDto(LocalDateTime.now()
-                    .truncatedTo(ChronoUnit.HOURS), LocalDateTime.now().truncatedTo(ChronoUnit.HOURS),
-                    itemDto.getId(), bookerDto.getId()));
-        }, "Совпадение дат начала и окончания бронирования должно привести к ошибке");
-
-        assertThrows(ValidationException.class, () -> {
-            bookingService.add(new BookingCreateDto(LocalDateTime.now().plusHours(1), LocalDateTime.now()
-                    .plusMinutes(30), itemDto.getId(), bookerDto.getId()));
-        }, "Дата начала бронирования не может быть позже даты окончания - это ошибка");
-
-        BookingDto bookingDto = bookingService.add(new BookingCreateDto(LocalDateTime.now()
-                .truncatedTo(ChronoUnit.HOURS), LocalDateTime.now().plusHours(1).truncatedTo(ChronoUnit.HOURS),
-                itemDto.getId(), bookerDto.getId()));
-
-        assertThrows(ConflictException.class, () -> {
-            bookingService.add(new BookingCreateDto(LocalDateTime.now(), LocalDateTime.now()
-                    .plusMinutes(40), itemDto.getId(), bookerDto.getId()));
-        }, "Пересечение броней по времени должно приводить к ошибке");
-    }
-
-    @Test
     void approveBooking() {
         BookingDto bookingDto = bookingService.add(new BookingCreateDto(LocalDateTime.now()
                 .truncatedTo(ChronoUnit.HOURS), LocalDateTime.now().plusHours(1).truncatedTo(ChronoUnit.HOURS),
@@ -184,28 +160,6 @@ class BookingServiceTest {
         assertThrows(ForbiddenException.class, () -> {
             bookingService.getById(555, bookingDto.getId());
         }, "Посторонний не должен получать данные бронирования");
-    }
-
-    @Test
-    void getBookingByIdByZeroUser() {
-        BookingDto bookingDto = bookingService.add(new BookingCreateDto(LocalDateTime.now()
-                .truncatedTo(ChronoUnit.HOURS), LocalDateTime.now().plusHours(1).truncatedTo(ChronoUnit.HOURS),
-                itemDto.getId(), bookerDto.getId()));
-
-        assertThrows(ValidationException.class, () -> {
-            bookingService.getById(0L, bookingDto.getId());
-        }, "Неверный вызов с нулевым ИД пользователя должен привести к ошибке");
-    }
-
-    @Test
-    void getBookingByIdZero() {
-        BookingDto bookingDto = bookingService.add(new BookingCreateDto(LocalDateTime.now()
-                .truncatedTo(ChronoUnit.HOURS), LocalDateTime.now().plusHours(1).truncatedTo(ChronoUnit.HOURS),
-                itemDto.getId(), bookerDto.getId()));
-
-        assertThrows(ValidationException.class, () -> {
-            bookingService.getById(bookerDto.getId(), 0L);
-        }, "Неверный вызов с нулевым ИД брони должен привести к ошибке");
     }
 
     @Test

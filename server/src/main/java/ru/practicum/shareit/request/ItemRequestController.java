@@ -40,7 +40,7 @@ public class ItemRequestController {
      */
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public ItemRequestDto add(@RequestHeader(SHARER_USER_ID) Long userId,
+    public ItemRequestDto add(@RequestHeader(SHARER_USER_ID) long userId,
                               @RequestBody ItemRequestCreateDto itemRequestCreateDto) {
         log.info("==> add userId = {}, itemRequestCreateDto = {}", userId, itemRequestCreateDto);
         itemRequestCreateDto.setUserId(userId);
@@ -57,7 +57,7 @@ public class ItemRequestController {
      * @return Список данных по запросах вещей с ответами.
      */
     @GetMapping
-    public List<ItemRequestDto> getRequestsByRequestorId(@RequestHeader(SHARER_USER_ID) Long userId) {
+    public List<ItemRequestDto> getRequestsByRequestorId(@RequestHeader(SHARER_USER_ID) long userId) {
         log.info("==> getRequestsByRequestorId userId = {}", userId);
         List<ItemRequestDto> itemRequestDtos = itemRequestService.getRequestsByRequestorId(userId);
         log.info("<== getRequestsByRequestorId {}", itemRequestDtos);
@@ -72,7 +72,7 @@ public class ItemRequestController {
      * @return Список данных по запросах вещей с ответами.
      */
     @GetMapping("/all")
-    public List<ItemRequestDto> getRequestsByOtherUsers(@RequestHeader(SHARER_USER_ID) Long userId) {
+    public List<ItemRequestDto> getRequestsByOtherUsers(@RequestHeader(SHARER_USER_ID) long userId) {
         log.info("==> getRequestsByOtherUsers userId = {}", userId);
         List<ItemRequestDto> itemRequestDtos = itemRequestService.getRequestsByOtherUsers(userId);
         log.info("<== getRequestsByOtherUsers {}", itemRequestDtos);
@@ -88,7 +88,7 @@ public class ItemRequestController {
      * @return Данные по запросу вещи с ответами на него.
      */
     @GetMapping("/{requestId}")
-    public ItemRequestDto getById(@RequestHeader(SHARER_USER_ID) Long userId,
+    public ItemRequestDto getById(@RequestHeader(SHARER_USER_ID) long userId,
                                   @PathVariable long requestId) {
         log.info("==> getById userId = {}, requestId = {}", userId, requestId);
         ItemRequestDto itemRequestDto = itemRequestService.getById(userId, requestId);
