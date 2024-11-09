@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.practicum.shareit.booking.dto.BookingCreateDto;
 import ru.practicum.shareit.booking.dto.BookingDto;
+import ru.practicum.shareit.exception.ConflictException;
 import ru.practicum.shareit.exception.ForbiddenException;
 import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.item.CommentRepository;
@@ -110,6 +111,19 @@ class BookingServiceTest {
         assertThat(bookingDtoApproved.getStatus()).isEqualTo(BookingStatus.APPROVED);
         assertThat(bookingDtoApproved.getItem().getId()).isEqualTo(bookingDto.getItem().getId());
         assertThat(bookingDtoApproved.getBooker().getId()).isEqualTo(bookerDto.getId());
+    }
+
+    @Test
+    void approveBookingCrossError() {
+        BookingDto bookingDto = bookingService.add(new BookingCreateDto(LocalDateTime.now()
+                .truncatedTo(ChronoUnit.HOURS), LocalDateTime.now().plusHours(1).truncatedTo(ChronoUnit.HOURS),
+                itemDto.getId(), bookerDto.getId()));
+
+        assertThrows(ConflictException.class, () -> {
+            bookingService.add(new BookingCreateDto(LocalDateTime.now()
+                    .truncatedTo(ChronoUnit.HOURS), LocalDateTime.now().plusMinutes(30),
+                    itemDto.getId(), bookerDto.getId()));
+        }, "Добавляемая бронь не может пересекаться с уже имеющимися бронированиями");
     }
 
     @Test

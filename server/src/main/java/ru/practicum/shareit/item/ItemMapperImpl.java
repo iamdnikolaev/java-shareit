@@ -146,4 +146,18 @@ public class ItemMapperImpl implements ItemMapper {
                         .build())
                 .collect(Collectors.toList());
     }
+
+    /**
+     * Метод преобразования выходных данных о вещи по запросу их предоставления.
+     *
+     * @param item вещь для вывода;
+     * @return Объект вещи для вывода данных.
+     */
+    public ItemResponseDto toItemResponseDto(Item item) {
+        return ItemResponseDto.builder()
+                .itemId(item.getId())
+                .name(item.getName())
+                .ownerId(item.getOwner().getId())
+                .build();
+    }
 }

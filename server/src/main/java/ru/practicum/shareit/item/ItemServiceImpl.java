@@ -194,9 +194,6 @@ public class ItemServiceImpl implements ItemService {
     public List<ItemDto> search(String text, long userId) {
         checkUserId(userId);
 
-        if (text.isEmpty()) {
-            return Collections.emptyList();
-        }
         return itemMapper.toItemDtoList(itemRepository.search(text));
     }
 

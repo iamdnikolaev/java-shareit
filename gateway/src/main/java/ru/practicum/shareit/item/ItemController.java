@@ -118,6 +118,9 @@ public class ItemController {
     public ResponseEntity<Object> search(@RequestHeader(SHARER_USER_ID) @Positive long userId,
                                          @RequestParam String text) {
         log.info("==> search by userId = {}, text = {}", userId, text);
+        if (text.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
         ResponseEntity<Object> itemsDto = itemClient.search(text, userId);
         log.info("<== {}", itemsDto);
 

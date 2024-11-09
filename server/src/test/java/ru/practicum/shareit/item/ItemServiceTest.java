@@ -286,21 +286,6 @@ class ItemServiceTest {
     }
 
     @Test
-    void searchByEmptyLine() {
-        ItemCreateDto itemCreateDto = new ItemCreateDto("Test new item", "Test new item description",
-                true, null, userDto.getId());
-        ItemCreateDto itemCreateDto2 = new ItemCreateDto("Test new item2", "Test new item description2",
-                true, null, userDto.getId());
-
-        itemService.add(itemCreateDto);
-        itemService.add(itemCreateDto2);
-
-        List<ItemDto> items = itemService.search("", userDto.getId());
-
-        assertThat(items).hasSize(0);
-    }
-
-    @Test
     void addComment() {
         ItemCreateDto itemCreateDto = new ItemCreateDto("Test new item", "Test new item description",
                 true, null, userDto.getId());

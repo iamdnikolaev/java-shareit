@@ -30,4 +30,6 @@ public interface ItemMapper {
     ItemDtoBookingDatesComments toItemDtoWithComments(Item item, List<CommentDto> comments);
 
     List<ItemResponseDto> toItemResponseDtoList(List<Item> items);
+
+    ItemResponseDto toItemResponseDto(Item item);
 }

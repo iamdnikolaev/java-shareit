@@ -104,16 +104,28 @@ class RequestServiceTest {
 
         ItemRequestDto requestDto2 = itemRequestService.add(new ItemRequestCreateDto("Need some big device",
                 otherUser.getId()));
+        ItemCreateDto itemTV = new ItemCreateDto("Телевизор Samsung 70 дюймов",
+                "Samsung UE70TU7100U 2024 года выпуска", true, requestDto2.getId(), userDto.getId());
+        itemService.add(itemTV);
+        ItemCreateDto itemTV2 = new ItemCreateDto("Телевизор LG 70 дюймов", "LG 70UN73506LB 2023 года выпуска",
+                true, requestDto2.getId(), userDto.getId());
+        itemService.add(itemTV2);
 
         ItemRequestDto requestDto3 = itemRequestService.add(new ItemRequestCreateDto("Need some big hammer",
                 otherUser2.getId()));
+        ItemCreateDto itemHummer = new ItemCreateDto("Молот ковочный",
+                "Молот ковочный МА4129А пневматический кузнечный", true, requestDto3.getId(),
+                userDto.getId());
+        itemService.add(itemHummer);
 
         List<ItemRequestDto> requestDtos = itemRequestService.getRequestsByOtherUsers(userDto.getId());
 
         assertThat(requestDtos).isNotNull();
         assertThat(requestDtos).hasSize(2);
-        assertTrue(requestDtos.contains(requestDto2), "Need some big device");
-        assertTrue(requestDtos.contains(requestDto3), "Need some big hammer");
+        assertTrue(requestDtos.contains(requestDto2), "Запрос Need some big device должен быть найден.");
+        assertTrue(requestDtos.contains(requestDto3), "Запрос Need some big hammer должен быть найден.");
+        assertThat(requestDtos.getFirst().getItems()).hasSize(1);
+        assertThat(requestDtos.getLast().getItems()).hasSize(2);
     }
 
     @Test

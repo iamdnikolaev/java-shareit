@@ -7,13 +7,18 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.item.ItemMapper;
 import ru.practicum.shareit.item.ItemRepository;
+import ru.practicum.shareit.item.dto.ItemResponseDto;
+import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.request.dto.ItemRequestCreateDto;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserRepository;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @AllArgsConstructor
@@ -70,13 +75,8 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     @Override
     public List<ItemRequestDto> getRequestsByRequestorId(long requestorId) {
         checkUserId(requestorId);
-        List<ItemRequest> requests = itemRequestRepository.findByRequestorIdOrderByCreatedDesc(requestorId);
-        List<ItemRequestDto> itemRequestDtos = requests.stream()
-                .map(request -> itemRequestMapper.toItemRequestDto(request,
-                        itemMapper.toItemResponseDtoList(itemRepository.getItemsByRequestId(request.getId()))))
-                .toList();
 
-        return itemRequestDtos;
+        return getRequestDtos(itemRequestRepository.findByRequestorIdOrderByCreatedDesc(requestorId));
     }
 
     /**
@@ -88,13 +88,8 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     @Override
     public List<ItemRequestDto> getRequestsByOtherUsers(long requestorId) {
         checkUserId(requestorId);
-        List<ItemRequest> requests = itemRequestRepository.findByOtherUsers(requestorId);
-        List<ItemRequestDto> itemRequestDtos = requests.stream()
-                .map(request -> itemRequestMapper.toItemRequestDto(request,
-                        itemMapper.toItemResponseDtoList(itemRepository.getItemsByRequestId(request.getId()))))
-                .toList();
 
-        return itemRequestDtos;
+        return getRequestDtos(itemRequestRepository.findByOtherUsers(requestorId));
     }
 
     /**
@@ -123,5 +118,32 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     private User checkUserId(long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("Пользователь не найден по userId = " + userId));
+    }
+
+    /**
+     * Метод получения данных о запросах вещей с описанием самих вещей.
+     *
+     * @param requests список запросов вещей для обработки.
+     * @return Список данных о запросах вещей
+     */
+    private List<ItemRequestDto> getRequestDtos(List<ItemRequest> requests) {
+        List<Long> requestIds = requests.stream().map(ItemRequest::getId).toList();
+        List<Item> items = itemRepository.getItemsByRequestIds(requestIds);
+
+        Map<Long, List<ItemResponseDto>> requestItems = new HashMap<>();
+        for (Item item : items) {
+            List<ItemResponseDto> itemResponseDtos = requestItems.get(item.getRequest().getId());
+            if (itemResponseDtos == null) {
+                itemResponseDtos = new ArrayList<>();
+                itemResponseDtos.add(itemMapper.toItemResponseDto(item));
+            } else {
+                itemResponseDtos.add(itemMapper.toItemResponseDto(item));
+            }
+            requestItems.put(item.getRequest().getId(), itemResponseDtos);
+        }
+
+        return requests.stream()
+                .map(request -> itemRequestMapper.toItemRequestDto(request, requestItems.get(request.getId())))
+                .toList();
     }
 }
